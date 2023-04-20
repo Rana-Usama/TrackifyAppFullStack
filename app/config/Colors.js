@@ -1,0 +1,16 @@
+export default {
+  primary: "#0269B4",
+  orange: "#f87c38",
+  secondary: "#BFD041",
+  lightRed: "#FF3F3FCC",
+  red: "#FF3F3FCC",
+  white: "#fff",
+  black: "black",
+  grey: "#d5d5d5",
+  darkGrey2: "#2D2D2D",
+  darkGrey: "#707070",
+  newInputFieldBorder: "#DEDEDE",
+  inputFieldBorder: "#393939",
+  inputFieldBackgroundColor: "#3C3C3C",
+  inputFieldPlaceholder: "#9AA3AE",
+};
