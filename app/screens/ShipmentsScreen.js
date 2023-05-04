@@ -40,7 +40,7 @@ function ShipmentsScreen({ route }, props) {
 
         const data = await response.json();
         setShipments(data.shipments);
-        console.log("Shipment Result :", data.shipments);
+        // console.log("Shipment Result :", data.shipments);
       } catch (error) {
         console.error(error);
       }

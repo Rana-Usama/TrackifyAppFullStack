@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView, Platform } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { CheckBox } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,10 +39,12 @@ function ViewShipmentScreen({ route, navigation }) {
         },
       });
       setShipmentData(response.data);
-      console.log("View Shipment result here ===> ", response.data);
+      // console.log("View Shipment result here ===> ", response.data);
     };
     fetchShipmentData();
   }, [shipment_id]);
+
+  // Call API
 
   return (
     <Screen style={styles.screen}>
@@ -133,7 +135,7 @@ function ViewShipmentScreen({ route, navigation }) {
               >
                 <View style={{ width: "90%", marginTop: RFPercentage(2), flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                   <Text style={{ color: "#051441", fontSize: RFPercentage(2), fontWeight: "bold" }}>Sender</Text>
-                  <Text style={{ color: "#051441", fontSize: RFPercentage(2), marginLeft: RFPercentage(6) }}>{item.sender_name == null ? "Null" : null}</Text>
+                  <Text style={{ color: "#051441", fontSize: RFPercentage(2), marginLeft: RFPercentage(6) }}>{item.sender_name == null ? "Null" : item.sender_name}</Text>
                 </View>
 
                 <View style={{ width: "90%", marginTop: RFPercentage(2), flexDirection: "row", justifyContent: "flex-start", alignItems: "flex-start" }}>
@@ -164,6 +166,51 @@ function ViewShipmentScreen({ route, navigation }) {
               <View style={{ marginTop: RFPercentage(3), width: "70%", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <TouchableOpacity
                   activeOpacity={0.6}
+                  onPress={() => {
+                    let phoneNumber = item.receiver_phone;
+
+                    if (Platform.OS === "android") {
+                      phoneNumber = `tel:${item.receiver_phone}`;
+                    } else {
+                      phoneNumber = `telprompt:${item.receiver_phone}`;
+                    }
+
+                    Linking.canOpenURL(phoneNumber)
+                      .then((supported) => {
+                        if (!supported) {
+                          console.log("Phone number is not available");
+                          alert("Invalid Phone Numbber");
+                        } else {
+                          return Linking.openURL(phoneNumber).then(() => {
+                            // Make a network request to the server to send a success message
+                            fetch("https://app.trackify.net/api/json/add_call.php", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                auth_key: auth_key,
+                              },
+                              body: JSON.stringify({ shipment_id: shipment_id }),
+                            })
+                              .then((response) => {
+                                if (!response.ok) {
+                                  throw new Error("Network response was not ok");
+                                }
+                                return response.json();
+                              })
+                              .then((json) => {
+                                console.log(json);
+                                if (json.update_success) {
+                                  console.log("Call successfully added");
+                                } else {
+                                  console.log(json.response_txt);
+                                }
+                              })
+                              .catch((error) => console.error(error));
+                          });
+                        }
+                      })
+                      .catch((err) => console.error("An error occurred", err));
+                  }}
                   style={{
                     width: RFPercentage(17),
                     height: RFPercentage(5.8),
@@ -181,7 +228,33 @@ function ViewShipmentScreen({ route, navigation }) {
                   onPress={() => {
                     const message = item.sms_text;
                     const encodedMessage = encodeURIComponent(message);
-                    Linking.openURL(`sms:&body=${encodedMessage}`);
+
+                    Linking.openURL(`sms:&body=${encodedMessage}`).then(() => {
+                      // Make a network request to the server to send a success message
+                      fetch("https://app.trackify.net/api/json/add_sms.php", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          auth_key: auth_key,
+                        },
+                        body: JSON.stringify({ shipment_id: shipment_id }),
+                      })
+                        .then((response) => {
+                          if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                          }
+                          return response.json();
+                        })
+                        .then((json) => {
+                          console.log(json);
+                          if (json.update_success) {
+                            console.log("Message successfully sent");
+                          } else {
+                            console.log(json.response_txt);
+                          }
+                        })
+                        .catch((error) => console.error(error));
+                    });
                   }}
                   activeOpacity={0.6}
                   style={{
