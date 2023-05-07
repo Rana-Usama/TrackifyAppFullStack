@@ -19,6 +19,7 @@ import SignUpScreen from "./app/screens/SignUpScreen";
 import ApprovalScreen from "./app/screens/ApprovalScreen";
 import ShipmentsScreen from "./app/screens/ShipmentsScreen";
 import ViewShipmentScreen from "./app/screens/ViewShipmentScreen";
+import ScanShipmentScreen from "./app/screens/ScanShipmentScreen";
 
 //config
 import Colors from "./app/config/Colors";
@@ -44,9 +45,9 @@ export default function App() {
     );
 
   // Bottom Tab
-  const HomeTab = ({ route,navigation }) => {
-    const {auth_key}=route.params
-    
+  const HomeTab = ({ route, navigation }) => {
+    const { auth_key } = route.params;
+
     return (
       <Tab.Navigator
         initialRouteName="ShipmentsScreen"
@@ -65,7 +66,7 @@ export default function App() {
         <Tab.Screen
           name="Shipments"
           // options={{ header: () => null }}
-         initialParams={{auth_key}}
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
@@ -74,15 +75,13 @@ export default function App() {
             },
             tabBarIcon: ({ color }) => <Feather name="box" color={color} style={{ fontSize: RFPercentage(3.2) }} />,
           }}
-        
           component={ShipmentsScreen}
         />
         <Tab.Screen
           name="View Shipments"
           // options={{ header: () => null }}
           component={ViewShipmentScreen}
-          initialParams={{auth_key}}
-        
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
@@ -96,8 +95,7 @@ export default function App() {
           name="Profile"
           // options={{ header: () => null }}
           component={ShipmentsScreen}
-          initialParams={{auth_key}}
-        
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
@@ -110,9 +108,8 @@ export default function App() {
         <Tab.Screen
           name="Scan Shipments"
           // options={{ header: () => null }}
-          component={ShipmentsScreen}
-          initialParams={{auth_key}}
-        
+          component={ScanShipmentScreen}
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
@@ -126,8 +123,7 @@ export default function App() {
           name="Notifications"
           // options={{ header: () => null }}
           component={ShipmentsScreen}
-          initialParams={{auth_key}}
-        
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
@@ -141,8 +137,7 @@ export default function App() {
           name="More"
           // options={{ header: () => null }}
           component={ShipmentsScreen}
-          initialParams={{auth_key}}
-        
+          initialParams={{ auth_key }}
           options={{
             header: () => null,
             tabBarLabelStyle: {
